@@ -18,7 +18,7 @@ export const App = () => {
     ])
     const [filter, setFilter] = useState<FilterValues>('all')
 
-    const createTask = (title:string) => {
+    const createTask = (title: string) => {
         const newTask = {id: v1(), title, isDone: false}
         const newTasks = [newTask, ...tasks]
         setTasks(newTasks)
@@ -29,6 +29,9 @@ export const App = () => {
     }
     const deleteTask = (taskId: string) => {
         setTasks(tasks.filter((task: Task) => task.id !== taskId))
+    }
+    const changeTaskStatus = (taskId: string, isDone: boolean) => {
+        setTasks(tasks.map((task: Task) => task.id === taskId ? {...task, isDone} : task))
     }
 
     let filteredTasks = tasks
@@ -48,6 +51,7 @@ export const App = () => {
                 changeFilter={changeFilter}
                 filter={filter}
                 createTask={createTask}
+                changeTaskStatus={changeTaskStatus}
             />
 
         </div>

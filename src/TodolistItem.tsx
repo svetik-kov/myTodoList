@@ -10,17 +10,25 @@ type Props = {
     changeFilter: (filter: FilterValues) => void
     filter: FilterValues
     createTask: (title: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean) => void
 }
-export const TodolistItem = ({tasks, title, deleteTask, changeFilter, createTask}: Props) => {
+export const TodolistItem = ({tasks,filter, title, deleteTask, changeTaskStatus, changeFilter, createTask}: Props) => {
     //const inputRef = useRef<HTMLInputElement>(null)
     const [taskTitle, setTaskTitle] = useState('')
+    const [error, setError] = useState<string | null>(null)
 
     const createTaskHandler = () => {
-        createTask(taskTitle)
-        setTaskTitle('')
+        const trimmedTitle = taskTitle.trim()
+        if (trimmedTitle !== '') {
+            createTask(trimmedTitle)
+            setTaskTitle('')
+        } else {
+            setError('Title is required')
+        }
     }
     const changeTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setTaskTitle(event.currentTarget.value)
+        setError(null)
     }
     const createTaskOnEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
@@ -43,11 +51,13 @@ export const TodolistItem = ({tasks, title, deleteTask, changeFilter, createTask
                     }}/>
                 </div>*/}
                 <div>
-                    <input value={taskTitle}
+                    <input className={error ? 'error' : ''}
+                           value={taskTitle}
                            onChange={changeTaskTitleHandler}
                            onKeyDown={createTaskOnEnterHandler}/>
                     <Button title={'+'}
                             onClick={createTaskHandler}/>
+                    {error && <div className={'error-message'}>{error}</div>}
                 </div>
                 {tasks.length === 0 ? (
                     <p>Тасок нет</p>
@@ -58,9 +68,13 @@ export const TodolistItem = ({tasks, title, deleteTask, changeFilter, createTask
                             const deleteTaskHandler = () => {
                                 deleteTask(task.id)
                             }
+                            const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
+                                const newStatusValue = e.currentTarget.checked
+                                changeTaskStatus(task.id, newStatusValue)
+                            }
                             return (
-                                <li key={task.id}>
-                                    <input type="checkbox" checked={task.isDone}/>
+                                <li className={task.isDone ? 'is-done' : ''} key={task.id}>
+                                    <input type="checkbox" checked={task.isDone} onChange={changeTaskStatusHandler}/>
                                     <span>{task.title}</span>
                                     <Button onClick={deleteTaskHandler} title={'x'}/>
                                 </li>
@@ -71,9 +85,15 @@ export const TodolistItem = ({tasks, title, deleteTask, changeFilter, createTask
 
 
                 <div>
-                    <Button onClick={() => changeFilter('all')} title={'All'}/>
-                    <Button onClick={() => changeFilter('active')} title={'Active'}/>
-                    <Button onClick={() => changeFilter('completed')} title={'Completed'}/>
+                    <Button className={filter === 'all' ? 'active-filter' : ''}
+                            title={'All'}
+                            onClick={() => changeFilter('all')}/>
+                    <Button className={filter === 'active' ? 'active-filter' : ''}
+                            title={'Active'}
+                            onClick={() => changeFilter('active')}/>
+                    <Button className={filter === 'completed' ? 'active-filter' : ''}
+                            title={'Completed'}
+                            onClick={() => changeFilter('completed')}/>
                 </div>
             </div>
         </div>
