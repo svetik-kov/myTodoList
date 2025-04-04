@@ -5,15 +5,16 @@ import {CreateItemForm} from './CreateItemForm'
 import {TodolistItem} from './TodolistItem'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
-
 import {containerSx} from './TodolistItem.styles.ts';
 import {NavButton} from './NavButton.ts';
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Switch from '@mui/material/Switch'
+import CssBaseline from '@mui/material/CssBaseline'
 
 export type Todolist = {
   id: string
@@ -30,6 +31,7 @@ export type Task = {
 export type FilterValues = 'all' | 'active' | 'completed'
 
 export type TasksState = Record<string, Task[]>
+type ThemeMode = 'dark' | 'light'
 
 export const App = () => {
   const todolistId1 = v1()
@@ -51,6 +53,20 @@ export const App = () => {
       { id: v1(), title: 'GraphQL', isDone: false },
     ],
   })
+  const [themeMode, setThemeMode] = useState<ThemeMode>('light')
+
+  const theme = createTheme({
+    palette: {
+      mode: themeMode,
+      primary: {
+        main: '#087EA4',
+      },
+    },
+  })
+
+  const changeMode = () => {
+    setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+  }
 
   const changeFilter = (todolistId: string, filter: FilterValues) => {
     setTodolists(todolists.map(todolist => todolist.id === todolistId ? { ...todolist, filter } : todolist))
@@ -92,8 +108,10 @@ export const App = () => {
 
   return (
       <div className="app">
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
         <AppBar position="static" sx={{ mb: '30px' }}>
-          <Toolbar>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Container maxWidth={'lg'} sx={containerSx}>
             <IconButton color="inherit">
               <MenuIcon />
@@ -101,7 +119,8 @@ export const App = () => {
           <div>
             <NavButton >Sign in</NavButton>
             <NavButton >Sign up</NavButton>
-            <NavButton background={'dodgerblue'}>Faq</NavButton>
+            <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+            <Switch color={'default'} onChange={changeMode} />
           </div>
             </Container>
           </Toolbar>
@@ -140,6 +159,7 @@ export const App = () => {
         })}
           </Grid>
         </Container>
+        </ThemeProvider>
       </div>
   )
 }
