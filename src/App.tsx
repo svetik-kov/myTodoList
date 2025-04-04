@@ -3,6 +3,14 @@ import {useState} from 'react'
 import {v1} from 'uuid'
 import {CreateItemForm} from './CreateItemForm'
 import {TodolistItem} from './TodolistItem'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid2'
+import Paper from '@mui/material/Paper'
 
 export type Todolist = {
   id: string
@@ -81,7 +89,21 @@ export const App = () => {
 
   return (
       <div className="app">
+        <AppBar position="static" sx={{ mb: '30px' }}>
+          <Toolbar>
+            <Container maxWidth={'lg'}>
+            <IconButton color="inherit">
+              <MenuIcon />
+            </IconButton>
+            <Button color="inherit">Sign in</Button>
+            </Container>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth={'lg'}>
+          <Grid container sx={{ mb: '30px' }}>
         <CreateItemForm onCreateItem={createTodolist}/>
+          </Grid>
+          <Grid container spacing={4}>
         {todolists.map(todolist => {
           const todolistTasks = tasks[todolist.id]
           let filteredTasks = todolistTasks
@@ -93,6 +115,8 @@ export const App = () => {
           }
 
           return (
+              <Grid key={todolist.id}>
+                <Paper sx={{ p: '0 20px 20px 20px' }}>
               <TodolistItem key={todolist.id}
                             todolist={todolist}
                             tasks={filteredTasks}
@@ -103,8 +127,12 @@ export const App = () => {
                             deleteTodolist={deleteTodolist}
                             changeTaskTitle={changeTaskTitle}
                             changeTodolistTitle={changeTodolistTitle}/>
+                </Paper>
+              </Grid>
           )
         })}
+          </Grid>
+        </Container>
       </div>
   )
 }
