@@ -1,6 +1,5 @@
 import './App.css'
 import {useReducer, useState} from 'react'
-import {v1} from 'uuid'
 import {CreateItemForm} from './CreateItemForm'
 import {TodolistItem} from './TodolistItem'
 import AppBar from '@mui/material/AppBar'
@@ -16,11 +15,19 @@ import {createTheme, ThemeProvider} from '@mui/material/styles'
 import Switch from '@mui/material/Switch'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
-    changeTodolistFilterAC, changeTodolistTitleAC,
+    changeTodolistFilterAC,
+    changeTodolistTitleAC,
     createTodolistAC,
     deleteTodolistAC,
     todolistsReducer
 } from './model/todolists-reducer.ts';
+import {
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    createTaskAC,
+    deleteTaskAC,
+    tasksReducer
+} from './model/tasks-reducer.ts';
 
 export type Todolist = {
     id: string
@@ -49,7 +56,7 @@ export const App = () => {
         { id: todolistId2, title: 'What to buy', filter: 'all' },
       ])
 
-      const [tasks, setTasks] = useState<TasksState>({
+      const [tasks, dispatchToTasks] = useState<TasksState>({
         [todolistId1]: [
           { id: v1(), title: 'HTML&CSS', isDone: true },
           { id: v1(), title: 'JS', isDone: true },
@@ -62,7 +69,8 @@ export const App = () => {
       })*/
 
     const [todolists, dispatchToTodolists] = useReducer(todolistsReducer, [])
-    const [tasks, setTasks] = useState<TasksState>({})
+    const [tasks, dispatchToTasks] = useReducer(tasksReducer, {})
+    //const [tasks, dispatchToTasks] = useState<TasksState>({})
 
     const [themeMode, setThemeMode] = useState<ThemeMode>('light')
 
@@ -80,7 +88,7 @@ export const App = () => {
     }
 
     const changeFilter = (todolistId: string, filter: FilterValues) => {
-        dispatchToTodolists(changeTodolistFilterAC({id:todolistId,filter}))
+        dispatchToTodolists(changeTodolistFilterAC({id: todolistId, filter}))
     }
 
     const createTodolist = (title: string) => {
@@ -88,34 +96,33 @@ export const App = () => {
          const newTodolist: Todolist = {id: todolistId, title, filter: 'all'}*/
         const action = createTodolistAC(title)
         dispatchToTodolists(action)
-        setTasks({...tasks, [action.payload.todolistId]: []})
+        dispatchToTasks(action)
     }
 
     const deleteTodolist = (todolistId: string) => {
-        dispatchToTodolists(deleteTodolistAC(todolistId))
-        delete tasks[todolistId]
-        setTasks({...tasks})
+        const action=deleteTodolistAC(todolistId)
+        dispatchToTodolists( action)
+        dispatchToTasks( action)
     }
 
     const changeTodolistTitle = (todolistId: string, title: string) => {
-        dispatchToTodolists(changeTodolistTitleAC({id:todolistId,title}))
+        dispatchToTodolists(changeTodolistTitleAC({id: todolistId, title}))
     }
 
     const deleteTask = (todolistId: string, taskId: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].filter(task => task.id !== taskId)})
+        dispatchToTasks(deleteTaskAC({taskId, todolistId}))
     }
 
     const createTask = (todolistId: string, title: string) => {
-        const newTask = {id: v1(), title, isDone: false}
-        setTasks({...tasks, [todolistId]: [newTask, ...tasks[todolistId]]})
+        dispatchToTasks(createTaskAC({todolistId, title}))
     }
 
     const changeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id == taskId ? {...task, isDone} : task)})
+        dispatchToTasks(changeTaskStatusAC({todolistId, taskId, isDone}))
     }
 
     const changeTaskTitle = (todolistId: string, taskId: string, title: string) => {
-        setTasks({...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? {...task, title} : task)})
+        dispatchToTasks(changeTaskTitleAC({todolistId, taskId, title}))
     }
 
     return (
