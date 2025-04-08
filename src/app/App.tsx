@@ -1,5 +1,4 @@
 import '../app/App.css'
-import {useState} from 'react'
 import {CreateItemForm} from '../CreateItemForm.tsx'
 import {TodolistItem} from '../TodolistItem.tsx'
 import AppBar from '@mui/material/AppBar'
@@ -11,7 +10,7 @@ import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import {containerSx} from '../TodolistItem.styles.ts';
 import {NavButton} from '../NavButton.ts';
-import {createTheme, ThemeProvider} from '@mui/material/styles'
+import { ThemeProvider} from '@mui/material/styles'
 import Switch from '@mui/material/Switch'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
@@ -25,6 +24,9 @@ import {useAppDispatch} from '../common/hooks/useAppDispatch.ts';
 import {useAppSelector} from '../common/hooks/useAppSelector.ts';
 import {selectTodolists} from '../model/todolists-selectors.ts';
 import {selectTasks} from '../model/tasks-selectors.ts';
+import {selectThemeMode} from '../app/app-selectors.ts';
+import {changeThemeModeAC} from '../app/app-reducer.ts';
+import {getTheme} from '../common/theme/theme.ts';
 
 export type Todolist = {
     id: string
@@ -41,27 +43,20 @@ export type Task = {
 export type FilterValues = 'all' | 'active' | 'completed'
 
 export type TasksState = Record<string, Task[]>
-type ThemeMode = 'dark' | 'light'
+//type ThemeMode = 'dark' | 'light'
 
 export const App = () => {
     const todolists = useAppSelector(selectTodolists)
     const tasks = useAppSelector(selectTasks)
+    const themeMode=useAppSelector(selectThemeMode)
+
     const dispatch = useAppDispatch()
 
-
-    const [themeMode, setThemeMode] = useState<ThemeMode>('light')
-
-    const theme = createTheme({
-        palette: {
-            mode: themeMode,
-            primary: {
-                main: '#087EA4',
-            },
-        },
-    })
+    const theme = getTheme(themeMode)
 
     const changeMode = () => {
-        setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+        //setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+        dispatch(changeThemeModeAC({themeMode:themeMode === 'light' ? 'dark' : 'light'}))
     }
 
     const changeFilter = (todolistId: string, filter: FilterValues) => {
@@ -73,7 +68,7 @@ export const App = () => {
     }
 
     const deleteTodolist = (todolistId: string) => {
-        dispatch(deleteTodolistAC({id:todolistId}))
+        dispatch(deleteTodolistAC({id: todolistId}))
     }
 
     const changeTodolistTitle = (todolistId: string, title: string) => {
