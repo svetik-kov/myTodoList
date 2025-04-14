@@ -1,4 +1,4 @@
-import { changeTodolistFilterAC, FilterValues, Todolist } from "@/features/todolists/model/todolists-reducer.ts"
+import { changeTodolistFilterAC, FilterValues, Todolist } from "@/features/todolists/model/todolists-slice.ts"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch.ts"

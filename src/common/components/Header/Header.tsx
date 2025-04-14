@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/common/hooks/useAppSelector.ts"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch.ts"
 import { getTheme } from "@/common/theme/theme.ts"
-import { changeThemeModeAC } from "@/app/app-reducer"
+import { changeThemeModeAC } from "@/app/app-slice.ts"
 import { selectThemeMode } from "@/app/app-selectors.ts"
 import Toolbar from "@mui/material/Toolbar"
 import Container from "@mui/material/Container"
