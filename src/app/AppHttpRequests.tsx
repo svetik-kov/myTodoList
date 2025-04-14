@@ -22,7 +22,8 @@ export const AppHttpRequests = () => {
       setTodolists(todolists)
       todolists.forEach((todolist) => {
         tasksApi.getTasks(todolist.id).then((res) => {
-          setTasks({ ...tasks, [todolist.id]: res.data.items })
+          // setTasks({ ...tasks, [todolist.id]: res.data.items })
+          setTasks((prevTasksState) => ({ ...prevTasksState, [todolist.id]: res.data.items }))
         })
       })
     })
@@ -32,12 +33,15 @@ export const AppHttpRequests = () => {
     todolistsApi.createTodolist(title).then((res) => {
       const newTodolist = res.data.data.item
       setTodolists([newTodolist, ...todolists])
+      setTasks({ ...tasks, [newTodolist.id]: [] })
     })
   }
 
   const deleteTodolist = (id: string) => {
     todolistsApi.deleteTodolist(id).then(() => {
       setTodolists(todolists.filter((el: Todolist) => el.id !== id))
+      delete tasks[id]
+      setTasks({ ...tasks })
     })
   }
 
