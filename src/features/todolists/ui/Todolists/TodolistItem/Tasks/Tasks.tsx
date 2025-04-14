@@ -1,41 +1,41 @@
-import List from '@mui/material/List';
-import {Task} from '@/features/todolists/model/tasks-reducer.ts';
+import List from "@mui/material/List"
+import { Task } from "@/features/todolists/model/tasks-reducer.ts"
 
-import {Todolist} from '@/features/todolists/model/todolists-reducer.ts';
-import {useAppSelector} from '@/common/hooks/useAppSelector.ts';
-import {selectTasks} from '@/features/todolists/model/tasks-selectors.ts';
-import {TaskItem} from '@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.tsx';
-
+import { Todolist } from "@/features/todolists/model/todolists-reducer.ts"
+import { useAppSelector } from "@/common/hooks/useAppSelector.ts"
+import { selectTasks } from "@/features/todolists/model/tasks-selectors.ts"
+import { TaskItem } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.tsx"
 
 type Props = {
-    todolist: Todolist
+  todolist: Todolist
 }
 
 export const Tasks = (props: Props) => {
-    const {todolist: {id, filter}} = props
-    const tasks = useAppSelector(selectTasks)
+  const {
+    todolist: { id, filter },
+  } = props
+  const tasks = useAppSelector(selectTasks)
 
+  const todolistTasks = tasks[id]
+  let filteredTasks = todolistTasks
+  if (filter === "active") {
+    filteredTasks = todolistTasks.filter((task: Task) => !task.isDone)
+  }
+  if (filter === "completed") {
+    filteredTasks = todolistTasks.filter((task: Task) => task.isDone)
+  }
 
-    const todolistTasks = tasks[id]
-    let filteredTasks = todolistTasks
-    if (filter === 'active') {
-        filteredTasks = todolistTasks.filter((task: Task) => !task.isDone)
-    }
-    if (filter === 'completed') {
-        filteredTasks = todolistTasks.filter((task: Task) => task.isDone)
-    }
-
-    return (
-        <>
-            {filteredTasks.length === 0 ? (
-                <p>Тасок нет</p>
-            ) : (
-                <List>
-                    {filteredTasks.map((task:Task) => (
-                        <TaskItem key={task.id} task={task} todolistId={id}/>
-                    ))}
-                </List>
-            )}
-        </>
-    )
+  return (
+    <>
+      {filteredTasks.length === 0 ? (
+        <p>Тасок нет</p>
+      ) : (
+        <List>
+          {filteredTasks.map((task: Task) => (
+            <TaskItem key={task.id} task={task} todolistId={id} />
+          ))}
+        </List>
+      )}
+    </>
+  )
 }

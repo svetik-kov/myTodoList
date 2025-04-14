@@ -1,23 +1,23 @@
-import {type ChangeEvent, type KeyboardEvent, useState} from 'react'
-import TextField from '@mui/material/TextField';
-import AddBoxIcon from '@mui/icons-material/AddBox'
-import IconButton from '@mui/material/IconButton'
+import { type ChangeEvent, type KeyboardEvent, useState } from "react"
+import TextField from "@mui/material/TextField"
+import AddBoxIcon from "@mui/icons-material/AddBox"
+import IconButton from "@mui/material/IconButton"
 
 type Props = {
   onCreateItem: (title: string) => void
 }
 
 export const CreateItemForm = ({ onCreateItem }: Props) => {
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState("")
   const [error, setError] = useState<string | null>(null)
 
   const createItemHandler = () => {
     const trimmedTitle = title.trim()
-    if (trimmedTitle !== '') {
+    if (trimmedTitle !== "") {
       onCreateItem(trimmedTitle)
-      setTitle('')
+      setTitle("")
     } else {
-      setError('Title is required')
+      setError("Title is required")
     }
   }
 
@@ -27,31 +27,29 @@ export const CreateItemForm = ({ onCreateItem }: Props) => {
   }
 
   const createItemOnEnterHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       createItemHandler()
     }
   }
 
   return (
-      <div>
+    <div>
+      <TextField
+        label={"Enter a title"}
+        variant={"outlined"}
+        className={error ? "error" : ""}
+        error={!!error}
+        helperText={error}
+        value={title}
+        size={"small"}
+        onChange={changeTitleHandler}
+        onKeyDown={createItemOnEnterHandler}
+      />
 
-
-
-        <TextField label={'Enter a title'}
-                   variant={'outlined'}
-                   className={error ? 'error' : ''}
-                   error={!!error}
-                   helperText={error}
-                   value={title}
-                   size={'small'}
-                   onChange={changeTitleHandler}
-                   onKeyDown={createItemOnEnterHandler}/>
-
-
-        {/*<Button variant="contained" onClick={createItemHandler}>+</Button>*/}
-        <IconButton onClick={createItemHandler} color={'primary'}>
-          <AddBoxIcon />
-        </IconButton>
-      </div>
+      {/*<Button variant="contained" onClick={createItemHandler}>+</Button>*/}
+      <IconButton onClick={createItemHandler} color={"primary"}>
+        <AddBoxIcon />
+      </IconButton>
+    </div>
   )
 }
