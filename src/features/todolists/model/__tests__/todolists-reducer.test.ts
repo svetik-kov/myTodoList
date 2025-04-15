@@ -5,21 +5,21 @@ import {
   changeTodolistTitleAC,
   createTodolistAC,
   deleteTodolistAC,
-  Todolist,
+  DomainTodolist,
   todolistsReducer,
 } from "@/features/todolists/model/todolists-slice.ts"
 
 let todolistId1: string
 let todolistId2: string
-let startState: Todolist[] = []
+let startState: DomainTodolist[] = []
 
 beforeEach(() => {
   todolistId1 = nanoid()
   todolistId2 = nanoid()
 
   startState = [
-    { id: todolistId1, title: "What to learn", filter: "all" },
-    { id: todolistId2, title: "What to buy", filter: "all" },
+    { id: todolistId1, title: "What to learn", filter: "all", addedDate: "", order: 0 },
+    { id: todolistId2, title: "What to buy", filter: "all", addedDate: "", order: 0 },
   ]
 })
 
