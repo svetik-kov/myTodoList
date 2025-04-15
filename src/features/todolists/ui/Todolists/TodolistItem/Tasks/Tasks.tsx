@@ -1,5 +1,5 @@
 import List from "@mui/material/List"
-import { Task } from "@/features/todolists/model/tasks-reducer.ts"
+import { Task } from "@/features/todolists/model/tasks-slice.ts"
 
 import { Todolist } from "@/features/todolists/model/todolists-slice.ts"
 import { useAppSelector } from "@/common/hooks/useAppSelector.ts"

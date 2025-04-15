@@ -1,4 +1,4 @@
-import { changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC, Task } from "@/features/todolists/model/tasks-reducer.ts"
+import { changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC, Task } from "@/features/todolists/model/tasks-slice.ts"
 import type { ChangeEvent } from "react"
 import ListItem from "@mui/material/ListItem"
 import { Checkbox } from "@mui/material"
