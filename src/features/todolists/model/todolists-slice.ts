@@ -41,6 +41,9 @@ export const _todolistsReducer = createReducer(initialState, (builder) => {
 export const todolistsSlice = createSlice({
   name: "todolists",
   initialState: [] as Todolist[],
+  selectors: {
+    selectTodolists: (state) => state,
+  },
   reducers: (create) => ({
     deleteTodolistAC: create.reducer<{ id: string }>((state, action) => {
       const index = state.findIndex((todolist) => todolist.id === action.payload.id)
@@ -68,7 +71,7 @@ export const todolistsSlice = createSlice({
     }),
   }),
 })
-
+export const { selectTodolists } = todolistsSlice.selectors
 export const todolistsReducer = todolistsSlice.reducer
 export const { deleteTodolistAC, createTodolistAC, changeTodolistTitleAC, changeTodolistFilterAC } =
   todolistsSlice.actions

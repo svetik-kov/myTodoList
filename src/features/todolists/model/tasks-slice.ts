@@ -50,6 +50,9 @@ export const _tasksReducer = createReducer(initialState, (builder) => {
 export const tasksSlice = createSlice({
   name: "tasks",
   initialState: {} as TasksState,
+  selectors: {
+    selectTasks: (state) => state,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createTodolistAC, (state, action) => {
@@ -86,6 +89,7 @@ export const tasksSlice = createSlice({
   }),
 })
 
+export const { selectTasks } = tasksSlice.selectors
 export const { deleteTaskAC, createTaskAC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
 
