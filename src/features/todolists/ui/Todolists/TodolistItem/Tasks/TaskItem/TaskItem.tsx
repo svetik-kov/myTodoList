@@ -9,17 +9,19 @@ import { getListItemSx } from "@/features/todolists/ui/Todolists/TodolistItem/Ta
 import { useAppDispatch } from "@/common/hooks/useAppDispatch.ts"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { TaskStatus } from "@/common/enums"
+import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 
 type Props = {
   task: DomainTask
-  todolistId: string
+  //todolistId: string
+  todolist: DomainTodolist
 }
 
-export const TaskItem = ({ task, todolistId }: Props) => {
+export const TaskItem = ({ task, todolist }: Props) => {
   const dispatch = useAppDispatch()
 
   const deleteTask = () => {
-    dispatch(deleteTaskTC({ todolistId, taskId: task.id }))
+    dispatch(deleteTaskTC({ todolistId: todolist.id, taskId: task.id }))
   }
 
   const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +29,7 @@ export const TaskItem = ({ task, todolistId }: Props) => {
 
     dispatch(
       updateTaskTC({
-        todolistId,
+        todolistId: todolist.id,
         taskId: task.id,
         domainModel: { status: newStatusValue ? TaskStatus.Completed : TaskStatus.New },
         //status: newStatusValue ? TaskStatus.Completed : TaskStatus.New,
@@ -36,17 +38,18 @@ export const TaskItem = ({ task, todolistId }: Props) => {
   }
 
   const changeTaskTitle = (title: string) => {
-    dispatch(updateTaskTC({ todolistId, taskId: task.id, domainModel: { title } }))
+    dispatch(updateTaskTC({ todolistId: todolist.id, taskId: task.id, domainModel: { title } }))
   }
 
   const isTaskCompleted = task.status === TaskStatus.Completed
+  const disabled = todolist.entityStatus === "loading"
   return (
     <ListItem sx={getListItemSx(isTaskCompleted)}>
       <div>
-        <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} />
-        <EditableSpan value={task.title} onChange={changeTaskTitle} />
+        <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} disabled={disabled} />
+        <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={disabled} />
       </div>
-      <IconButton onClick={deleteTask}>
+      <IconButton onClick={deleteTask} disabled={disabled}>
         <DeleteIcon />
       </IconButton>
     </ListItem>

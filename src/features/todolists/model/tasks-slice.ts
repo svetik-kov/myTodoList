@@ -3,7 +3,7 @@ import { createAppSlice, handleServerAppError, handleServerNetworkError } from "
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
 import { RootState } from "@/app/store.ts"
-import { setAppErrorAC, setAppStatusAC } from "@/app/app-slice.ts"
+import { setAppStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 
 export const tasksSlice = createAppSlice({
@@ -30,7 +30,7 @@ export const tasksSlice = createAppSlice({
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolistId, tasks: res.data.items }
         } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },
@@ -67,11 +67,16 @@ export const tasksSlice = createAppSlice({
       async (payload: { todolistId: string; taskId: string }, { dispatch, rejectWithValue }) => {
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
-          await tasksApi.deleteTask(payload)
-          dispatch(setAppStatusAC({ status: "succeeded" }))
-          return payload
+          const res = await tasksApi.deleteTask(payload)
+          if (res.data.resultCode === ResultCode.Success) {
+            dispatch(setAppStatusAC({ status: "succeeded" }))
+            return payload
+          } else {
+            handleServerAppError(res.data, dispatch)
+            return rejectWithValue(null)
+          }
         } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },
@@ -85,47 +90,6 @@ export const tasksSlice = createAppSlice({
         },
       },
     ),
-    /*  changeTaskStatusTC: create.asyncThunk(
-      async (
-        payload: { todolistId: string; taskId: string; status: TaskStatus },
-        { dispatch, rejectWithValue, getState },
-      ) => {
-        const { todolistId, taskId, status } = payload
-
-        const allTodolistTasks = (getState() as RootState).tasks[todolistId]
-        const task = allTodolistTasks.find((task) => task.id === taskId)
-
-        if (!task) {
-          return rejectWithValue(null)
-        }
-        const model: UpdateTaskModel = {
-          description: task.description,
-          title: task.title,
-          priority: task.priority,
-          startDate: task.startDate,
-          deadline: task.deadline,
-          status,
-        }
-
-        try {
-          dispatch(setAppStatusAC({ status: "loading" }))
-          const res = await tasksApi.updateTask({ todolistId, taskId, model })
-          dispatch(setAppStatusAC({ status: "succeeded" }))
-          return { task: res.data.data.item }
-        } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
-          return rejectWithValue(null)
-        }
-      },
-      {
-        fulfilled: (state, action) => {
-          const task = state[action.payload.task.todoListId].find((task) => task.id === action.payload.task.id)
-          if (task) {
-            task.status = action.payload.task.status
-          }
-        },
-      },
-    ),*/
 
     updateTaskTC: create.asyncThunk(
       async (
@@ -151,15 +115,6 @@ export const tasksSlice = createAppSlice({
           ...domainModel,
         }
 
-        /*try {
-          dispatch(setAppStatusAC({ status: "loading" }))
-          const res = await tasksApi.updateTask({ todolistId, taskId, model })
-          dispatch(setAppStatusAC({ status: "succeeded" }))
-          return { task: res.data.data.item }
-        } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
-          return rejectWithValue(null)
-        }*/
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.updateTask({ todolistId, taskId, model })
