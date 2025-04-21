@@ -1,4 +1,4 @@
-import { changeTaskStatusTC, changeTaskTitleAC, deleteTaskTC } from "@/features/todolists/model/tasks-slice.ts"
+import { deleteTaskTC, updateTaskTC } from "@/features/todolists/model/tasks-slice.ts"
 import type { ChangeEvent } from "react"
 import ListItem from "@mui/material/ListItem"
 import { Checkbox } from "@mui/material"
@@ -9,6 +9,7 @@ import { getListItemSx } from "@/features/todolists/ui/Todolists/TodolistItem/Ta
 import { useAppDispatch } from "@/common/hooks/useAppDispatch.ts"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { TaskStatus } from "@/common/enums"
+
 type Props = {
   task: DomainTask
   todolistId: string
@@ -25,16 +26,17 @@ export const TaskItem = ({ task, todolistId }: Props) => {
     const newStatusValue = e.currentTarget.checked
 
     dispatch(
-      changeTaskStatusTC({
+      updateTaskTC({
         todolistId,
         taskId: task.id,
-        status: newStatusValue ? TaskStatus.Completed : TaskStatus.New,
+        domainModel: { status: newStatusValue ? TaskStatus.Completed : TaskStatus.New },
+        //status: newStatusValue ? TaskStatus.Completed : TaskStatus.New,
       }),
     )
   }
 
   const changeTaskTitle = (title: string) => {
-    dispatch(changeTaskTitleAC({ todolistId, taskId: task.id, title }))
+    dispatch(updateTaskTC({ todolistId, taskId: task.id, domainModel: { title } }))
   }
 
   const isTaskCompleted = task.status === TaskStatus.Completed
