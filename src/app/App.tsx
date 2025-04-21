@@ -5,9 +5,9 @@ import { useAppSelector } from "@/common/hooks"
 import { getTheme } from "@/common/theme/theme.ts"
 
 import { Header } from "@/common/components/Header/Header.tsx"
-import { Main } from "@/app/Main.tsx"
 import { selectThemeMode } from "@/app/app-slice.ts"
 import { ErrorSnackbar } from "@/common/components"
+import { Routing } from "@/common/routing"
 
 export const App = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -19,7 +19,7 @@ export const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Header />
-        <Main />
+        <Routing />
         <ErrorSnackbar />
       </ThemeProvider>
     </div>

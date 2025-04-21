@@ -14,22 +14,20 @@ type Props = {
 }
 
 export const Tasks = (props: Props) => {
-  const {
-    todolist: { id, filter },
-  } = props
+  const { todolist } = props
   const tasks = useAppSelector(selectTasks)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(fetchTasksTC(id))
+    dispatch(fetchTasksTC(todolist.id))
   }, [])
 
-  const todolistTasks = tasks[id]
+  const todolistTasks = tasks[todolist.id]
   let filteredTasks = todolistTasks
-  if (filter === "active") {
+  if (todolist.filter === "active") {
     filteredTasks = todolistTasks.filter((task) => task.status === TaskStatus.New)
   }
-  if (filter === "completed") {
+  if (todolist.filter === "completed") {
     filteredTasks = todolistTasks.filter((task) => task.status === TaskStatus.Completed)
   }
 
@@ -38,7 +36,11 @@ export const Tasks = (props: Props) => {
       {filteredTasks?.length === 0 ? (
         <p>Тасок нет</p>
       ) : (
-        <List>{filteredTasks?.map((task: DomainTask) => <TaskItem key={task.id} task={task} todolistId={id} />)}</List>
+        <List>
+          {filteredTasks?.map((task: DomainTask) => (
+            <TaskItem key={task.id} task={task} /*todolistId={id}*/ todolist={todolist} />
+          ))}
+        </List>
       )}
     </>
   )
