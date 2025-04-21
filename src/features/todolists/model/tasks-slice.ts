@@ -1,10 +1,10 @@
-import { nanoid } from "@reduxjs/toolkit"
 import { createTodolistTC, deleteTodolistTC } from "@/features/todolists/model/todolists-slice.ts"
 import { createAppSlice } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
-import { TaskPriority, TaskStatus } from "@/common/enums"
+import { TaskStatus } from "@/common/enums"
 import { RootState } from "@/app/store.ts"
+import { setAppStatusAC } from "@/app/app-slice.ts"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -23,12 +23,15 @@ export const tasksSlice = createAppSlice({
   },
   reducers: (create) => ({
     fetchTasksTC: create.asyncThunk(
-      async (todolistId: string, thunkAPI) => {
+      async (todolistId: string, { dispatch, rejectWithValue }) => {
         try {
+          dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.getTasks(todolistId)
+          dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolistId, tasks: res.data.items }
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(setAppStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {
@@ -38,12 +41,15 @@ export const tasksSlice = createAppSlice({
       },
     ),
     createTaskTC: create.asyncThunk(
-      async (payload: { todolistId: string; title: string }, thunkAPI) => {
+      async (payload: { todolistId: string; title: string }, { dispatch, rejectWithValue }) => {
         try {
+          dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.createTask(payload)
+          dispatch(setAppStatusAC({ status: "succeeded" }))
           return { task: res.data.data.item }
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(setAppStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {
@@ -53,12 +59,15 @@ export const tasksSlice = createAppSlice({
       },
     ),
     deleteTaskTC: create.asyncThunk(
-      async (payload: { todolistId: string; taskId: string }, thunkAPI) => {
+      async (payload: { todolistId: string; taskId: string }, { dispatch, rejectWithValue }) => {
         try {
+          dispatch(setAppStatusAC({ status: "loading" }))
           await tasksApi.deleteTask(payload)
+          dispatch(setAppStatusAC({ status: "succeeded" }))
           return payload
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(setAppStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {
@@ -72,14 +81,17 @@ export const tasksSlice = createAppSlice({
       },
     ),
     changeTaskStatusTC: create.asyncThunk(
-      async (payload: { todolistId: string; taskId: string; status: TaskStatus }, thunkAPI) => {
+      async (
+        payload: { todolistId: string; taskId: string; status: TaskStatus },
+        { dispatch, rejectWithValue, getState },
+      ) => {
         const { todolistId, taskId, status } = payload
 
-        const allTodolistTasks = (thunkAPI.getState() as RootState).tasks[todolistId]
+        const allTodolistTasks = (getState() as RootState).tasks[todolistId]
         const task = allTodolistTasks.find((task) => task.id === taskId)
 
         if (!task) {
-          return thunkAPI.rejectWithValue(null)
+          return rejectWithValue(null)
         }
         const model: UpdateTaskModel = {
           description: task.description,
@@ -91,10 +103,13 @@ export const tasksSlice = createAppSlice({
         }
 
         try {
+          dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.updateTask({ todolistId, taskId, model })
+          dispatch(setAppStatusAC({ status: "succeeded" }))
           return { task: res.data.data.item }
         } catch (error) {
-          return thunkAPI.rejectWithValue(null)
+          dispatch(setAppStatusAC({ status: "failed" }))
+          return rejectWithValue(null)
         }
       },
       {
