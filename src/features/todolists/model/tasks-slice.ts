@@ -32,7 +32,7 @@ export const tasksSlice = createAppSlice({
           return { todolistId, tasks }
           //return { todolistId, tasks: res.data.items }
         } catch (error) {
-          console.log(error)
+          //console.log(error)
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }

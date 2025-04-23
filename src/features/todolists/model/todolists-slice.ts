@@ -1,9 +1,10 @@
-import { Todolist } from "@/features/todolists/api/todolistsApi.types.ts"
+import { Todolist, TodolistSchema } from "@/features/todolists/api/todolistsApi.types.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { setAppStatusAC } from "@/app/app-slice.ts"
 import { RequestStatus } from "@/common/types"
 import { ResultCode } from "@/common/enums/enums.ts"
+import { DomainTaskSchema } from "@/features/todolists/api/tasksApi.types.ts"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
@@ -17,9 +18,12 @@ export const todolistsSlice = createAppSlice({
         dispatch(setAppStatusAC({ status: "loading" }))
         try {
           const res = await todolistsApi.getTodolists()
+          const todolists = TodolistSchema.array().parse(res.data)
           dispatch(setAppStatusAC({ status: "succeeded" }))
-          return { todolists: res.data }
+          //return { todolists: res.data }
+          return { todolists }
         } catch (error) {
+          //console.log(error)
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
