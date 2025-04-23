@@ -54,6 +54,7 @@ export const TaskItem = ({ task, todolist }: Props) => {
         <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={todolist.entityStatus === "loading"} />
       </div>
       <IconButton onClick={deleteTask} disabled={todolist.entityStatus === "loading"}>
+        <span>{new Date(task.addedDate).toLocaleDateString()}</span>
         <DeleteIcon />
       </IconButton>
     </ListItem>
