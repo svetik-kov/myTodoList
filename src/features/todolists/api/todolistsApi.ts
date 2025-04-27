@@ -29,6 +29,7 @@ export const todolistsApi = createApi({
 })
 
 export const { useGetTodolistsQuery } = todolistsApi
+export const { useLazyGetTodolistsQuery } = todolistsApi
 
 export const _todolistsApi = {
   getTodolists() {
