@@ -26,8 +26,9 @@ export const Header = () => {
   }
 
   const logout = () => {
-    logoutTC()
+    dispatch(logoutTC())
   }
+
   return (
     <AppBar position="static" sx={{ mb: "30px" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>

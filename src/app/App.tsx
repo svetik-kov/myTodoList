@@ -7,21 +7,25 @@ import { Header } from "@/common/components/Header/Header.tsx"
 import { selectThemeMode } from "@/app/app-slice.ts"
 import { ErrorSnackbar } from "@/common/components"
 import { Routing } from "@/common/routing"
-import { useEffect, useState } from "react"
-import { initializeAppTC } from "@/features/auth/model/auth-slice.ts"
+import { useEffect } from "react"
+import { initializeAppTC, selectIsInitialized } from "@/features/auth/model/auth-slice.ts"
 import { CircularProgress } from "@mui/material"
 import styles from "./App.module.css"
 
 export const App = () => {
-  const [isInitialized, setIsInitialized] = useState(false)
+  // const [isInitialized, setIsInitialized] = useState(false)
+  const isInitialized = useAppSelector(selectIsInitialized)
   const themeMode = useAppSelector(selectThemeMode)
   const dispatch = useAppDispatch()
   const theme = getTheme(themeMode)
 
-  useEffect(() => {
+  /*  useEffect(() => {
     dispatch(initializeAppTC()).finally(() => {
       setIsInitialized(true)
     })
+  }, [])*/
+  useEffect(() => {
+    dispatch(initializeAppTC())
   }, [])
 
   if (!isInitialized) {
