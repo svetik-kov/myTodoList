@@ -7,7 +7,7 @@ export const Todolists = () => {
   /*const todolists = useAppSelector(selectTodolists)
   const dispatch = useAppDispatch()*/
 
-  const { data: todolists, refetch } = useGetTodolistsQuery()
+  const { data: todolists } = useGetTodolistsQuery()
 
   /*useEffect(() => {
     dispatch(fetchTodolistsTC())
@@ -15,9 +15,6 @@ export const Todolists = () => {
 
   return (
     <>
-      <div>
-        <button onClick={refetch}>Получить свежие данные</button>
-      </div>
       {todolists?.map((todolist) => {
         return (
           <Grid key={todolist.id}>
