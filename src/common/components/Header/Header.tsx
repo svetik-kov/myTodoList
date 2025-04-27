@@ -1,7 +1,13 @@
 import { useAppSelector } from "@/common/hooks/useAppSelector.ts"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch.ts"
 import { getTheme } from "@/common/theme/theme.ts"
-import { changeThemeModeAC, selectAppStatus, selectThemeMode } from "@/app/app-slice.ts"
+import {
+  changeThemeModeAC,
+  selectAppStatus,
+  selectIsLoggedIn,
+  selectThemeMode,
+  setIsLoggedInAC,
+} from "@/app/app-slice.ts"
 import Toolbar from "@mui/material/Toolbar"
 import Container from "@mui/material/Container"
 import IconButton from "@mui/material/IconButton"
@@ -11,7 +17,10 @@ import Switch from "@mui/material/Switch"
 import AppBar from "@mui/material/AppBar"
 import { containerSx } from "@/common/styles/container.styles.ts"
 import LinearProgress from "@mui/material/LinearProgress"
-import { logoutTC, selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
+import { useLogoutMutation } from "@/features/auth/api/authApi.ts"
+import { ResultCode } from "@/common/enums/enums.ts"
+import { AUTH_TOKEN } from "@/common/constants"
+import { clearDataAC } from "@/common/actions"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -20,13 +29,23 @@ export const Header = () => {
   const dispatch = useAppDispatch()
 
   const theme = getTheme(themeMode)
+  const [logout] = useLogoutMutation()
 
   const changeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
   }
 
-  const logout = () => {
+  /*const logout = () => {
     dispatch(logoutTC())
+  }*/
+  const logoutHandler = () => {
+    logout().then((res) => {
+      if (res.data?.resultCode === ResultCode.Success) {
+        dispatch(setIsLoggedInAC({ isLoggedIn: false }))
+        localStorage.removeItem(AUTH_TOKEN)
+        dispatch(clearDataAC())
+      }
+    })
   }
 
   return (
@@ -37,9 +56,7 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
           <div>
-            {/* <NavButton>Sign in</NavButton>
-            <NavButton>Sign up</NavButton>*/}
-            {isLoggedIn && <NavButton onClick={logout}>Sign out</NavButton>}
+            {isLoggedIn && <NavButton onClick={logoutHandler}>Sign out</NavButton>}
             <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
             <Switch color={"default"} onChange={changeMode} />
           </div>
