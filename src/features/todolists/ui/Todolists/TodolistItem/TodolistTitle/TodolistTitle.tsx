@@ -3,7 +3,13 @@ import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
 import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan.tsx"
 import IconButton from "@mui/material/IconButton"
 import DeleteIcon from "@mui/icons-material/Delete"
-import { useRemoveTodolistMutation, useUpdateTodolistTitleMutation } from "@/features/todolists/api/todolistsApi.ts"
+import {
+  todolistsApi,
+  useRemoveTodolistMutation,
+  useUpdateTodolistTitleMutation,
+} from "@/features/todolists/api/todolistsApi.ts"
+import { RequestStatus } from "@/common/types"
+import { useAppDispatch } from "@/common/hooks"
 
 type Props = {
   todolist: DomainTodolist
@@ -14,17 +20,29 @@ export const TodolistTitle = ({ todolist }: Props) => {
 
   const [removeTodolist] = useRemoveTodolistMutation()
   const [updateTodolistTitle] = useUpdateTodolistTitleMutation()
+  const dispatch = useAppDispatch()
 
-  // const dispatch = useAppDispatch()
+  const changeTodolistStatus = (entityStatus: RequestStatus) => {
+    dispatch(
+      todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {
+        const todolist = state.find((todolist) => todolist.id === id)
+        if (todolist) {
+          todolist.entityStatus = entityStatus
+        }
+      }),
+    )
+  }
 
   const deleteTodolist = () => {
-    // dispatch(deleteTodolistTC(id))
+    changeTodolistStatus("loading")
     removeTodolist(id)
+      .unwrap()
+      .catch(() => {
+        changeTodolistStatus("idle")
+      })
   }
 
   const changeTodolistTitle = (title: string) => {
-    //dispatch(changeTodolistTitleAC({ id, title }))
-    //dispatch(changeTodolistTitleTC({ id, title }))
     updateTodolistTitle({ id, title })
   }
 
