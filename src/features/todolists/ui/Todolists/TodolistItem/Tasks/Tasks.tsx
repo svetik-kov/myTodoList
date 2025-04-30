@@ -4,9 +4,7 @@ import { TaskItem } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/T
 import { TaskStatus } from "@/common/enums"
 import { useGetTasksQuery } from "@/features/todolists/api/tasksApi.ts"
 import { TasksSkeleton } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksSkeleton"
-import { useAppDispatch } from "@/common/hooks"
-import { useEffect, useState } from "react"
-import { setAppErrorAC } from "@/app/app-slice.ts"
+import { useState } from "react"
 import { DomainTodolist } from "@/features/todolists/lib/types"
 import { TasksPagination } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksPagination/TasksPagination.tsx"
 
@@ -18,20 +16,23 @@ export const Tasks = (props: Props) => {
   const { todolist } = props
   const { id, filter } = todolist
   const [page, setPage] = useState(1)
-  const { data, isLoading, error, isFetching } = useGetTasksQuery({ todolistId: id, params: { page: 1 } })
-  const dispatch = useAppDispatch()
+  const { data, currentData, isLoading, isFetching } = useGetTasksQuery({ todolistId: id, params: { page } })
+  //const dispatch = useAppDispatch()
+
   console.log({ isLoading, isFetching })
-  useEffect(() => {
-    if (!error) return
-    if ("status" in error) {
-      // FetchBaseQueryError
-      const errMsg = "error" in error ? error.error : JSON.stringify(error.data)
-      dispatch(setAppErrorAC({ error: errMsg }))
-    } else {
-      // SerializedError
-      dispatch(setAppErrorAC({ error: error.message || "Some error occurred" }))
-    }
-  }, [error])
+  console.log({ data, currentData })
+
+  /* useEffect(() => {
+     if (!error) return
+     if ("status" in error) {
+       // FetchBaseQueryError
+       const errMsg = "error" in error ? error.error : JSON.stringify(error.data)
+       dispatch(setAppErrorAC({ error: errMsg }))
+     } else {
+       // SerializedError
+       dispatch(setAppErrorAC({ error: error.message || "Some error occurred" }))
+     }
+   }, [error])*/
 
   if (isLoading) {
     return <TasksSkeleton />

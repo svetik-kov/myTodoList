@@ -5,13 +5,8 @@ import { handleError } from "@/common/utils"
 export const baseApi = createApi({
   reducerPath: "todolistsApi",
   tagTypes: ["Todolist", "Task"],
-  /*baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    prepareHeaders: (headers) => {
-      headers.set("API-KEY", import.meta.env.VITE_API_KEY)
-      headers.set("Authorization", `Bearer ${localStorage.getItem(AUTH_TOKEN)}`)
-    },
-  }),*/
+  keepUnusedDataFor: 5,
+
   baseQuery: async (args, api, extraOptions) => {
     const result = await fetchBaseQuery({
       baseUrl: import.meta.env.VITE_BASE_URL,
