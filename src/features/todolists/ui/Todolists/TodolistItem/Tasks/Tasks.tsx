@@ -5,6 +5,9 @@ import { TaskStatus } from "@/common/enums"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { useGetTasksQuery } from "@/features/todolists/api/tasksApi.ts"
 import { TasksSkeleton } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksSkeleton"
+import { useAppDispatch } from "@/common/hooks"
+import { useEffect } from "react"
+import { setAppErrorAC } from "@/app/app-slice.ts"
 
 type Props = {
   todolist: DomainTodolist
@@ -12,13 +15,22 @@ type Props = {
 
 export const Tasks = (props: Props) => {
   const { todolist } = props
-
   const { id, filter } = todolist
-  const { data, isLoading } = useGetTasksQuery(id)
+  const { data, isLoading, error } = useGetTasksQuery(id)
+  const dispatch = useAppDispatch()
 
-  /* useEffect(() => {
-     dispatch(fetchTasksTC(todolist.id))
-   }, [])*/
+  useEffect(() => {
+    if (!error) return
+    if ("status" in error) {
+      // FetchBaseQueryError
+      const errMsg = "error" in error ? error.error : JSON.stringify(error.data)
+      dispatch(setAppErrorAC({ error: errMsg }))
+    } else {
+      // SerializedError
+      dispatch(setAppErrorAC({ error: error.message || "Some error occurred" }))
+    }
+  }, [error])
+
   if (isLoading) {
     return <TasksSkeleton />
   }
