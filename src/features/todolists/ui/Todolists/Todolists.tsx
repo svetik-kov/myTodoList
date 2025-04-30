@@ -7,8 +7,10 @@ import Box from "@mui/material/Box"
 import { TodolistSkeleton } from "@/features/todolists/ui/Todolists/TodolistSkeleton/TodolistSkeleton.tsx"
 
 export const Todolists = () => {
-  const { data: todolists, isLoading } = useGetTodolistsQuery()
-
+  const { data: todolists, isLoading } = useGetTodolistsQuery(undefined, {
+    pollingInterval: 3000,
+    skipPollingIfUnfocused: true,
+  })
   if (isLoading) {
     return (
       <Box sx={containerSx} style={{ gap: "32px" }}>
