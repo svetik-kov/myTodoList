@@ -2,13 +2,13 @@ import List from "@mui/material/List"
 import { TaskItem } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.tsx"
 
 import { TaskStatus } from "@/common/enums"
-import { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { useGetTasksQuery } from "@/features/todolists/api/tasksApi.ts"
 import { TasksSkeleton } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksSkeleton"
 import { useAppDispatch } from "@/common/hooks"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { setAppErrorAC } from "@/app/app-slice.ts"
 import { DomainTodolist } from "@/features/todolists/lib/types"
+import { TasksPagination } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksPagination/TasksPagination.tsx"
 
 type Props = {
   todolist: DomainTodolist
@@ -17,9 +17,10 @@ type Props = {
 export const Tasks = (props: Props) => {
   const { todolist } = props
   const { id, filter } = todolist
-  const { data, isLoading, error } = useGetTasksQuery({ todolistId: id, params: { page: 1 } })
+  const [page, setPage] = useState(1)
+  const { data, isLoading, error, isFetching } = useGetTasksQuery({ todolistId: id, params: { page: 1 } })
   const dispatch = useAppDispatch()
-
+  console.log({ isLoading, isFetching })
   useEffect(() => {
     if (!error) return
     if ("status" in error) {
@@ -50,11 +51,15 @@ export const Tasks = (props: Props) => {
       {filteredTasks?.length === 0 ? (
         <p>Тасок нет</p>
       ) : (
-        <List>
-          {filteredTasks?.map((task: DomainTask) => (
-            <TaskItem key={task.id} task={task} /*todolistId={id}*/ todolist={todolist} />
-          ))}
-        </List>
+        /* <List>
+           {filteredTasks?.map((task: DomainTask) => (
+             <TaskItem key={task.id} task={task} /!*todolistId={id}*!/ todolist={todolist} />
+           ))}
+         </List>*/
+        <>
+          <List>{filteredTasks?.map((task) => <TaskItem key={task.id} task={task} todolist={todolist} />)}</List>
+          <TasksPagination totalCount={data?.totalCount || 0} page={page} setPage={setPage} />
+        </>
       )}
     </>
   )
