@@ -1,6 +1,6 @@
 import List from "@mui/material/List"
 import { TaskItem } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TaskItem/TaskItem.tsx"
-import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
+
 import { TaskStatus } from "@/common/enums"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
 import { useGetTasksQuery } from "@/features/todolists/api/tasksApi.ts"
@@ -8,6 +8,7 @@ import { TasksSkeleton } from "@/features/todolists/ui/Todolists/TodolistItem/Ta
 import { useAppDispatch } from "@/common/hooks"
 import { useEffect } from "react"
 import { setAppErrorAC } from "@/app/app-slice.ts"
+import { DomainTodolist } from "@/features/todolists/lib/types"
 
 type Props = {
   todolist: DomainTodolist

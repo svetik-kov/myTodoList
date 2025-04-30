@@ -1,9 +1,9 @@
-import { DomainTodolist, FilterValues } from "@/features/todolists/model/todolists-slice.ts"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch.ts"
 import { containerSx } from "@/common/styles/container.styles.ts"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
+import { DomainTodolist, FilterValues } from "@/features/todolists/lib/types"
 
 type Props = {
   todolist: DomainTodolist
@@ -27,7 +27,7 @@ export const FilterButtons = ({ todolist }: Props) => {
         undefined,
         // `updateRecipe` - коллбэк для обновления закэшированного стейта мутабельным образом
         (state) => {
-          const todolist = state.find((todolist) => todolist.id === id)
+          const todolist = state.find((todolist: DomainTodolist) => todolist.id === id)
           if (todolist) {
             todolist.filter = filter
           }

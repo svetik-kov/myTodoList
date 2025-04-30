@@ -1,8 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { AUTH_TOKEN } from "@/common/constants"
-import { setAppErrorAC } from "@/app/app-slice.ts"
-import { isErrorWithMessage } from "@/common/utils/isErrorWithMessage.ts"
-import { ResultCode } from "@/common/enums/enums.ts"
 import { handleError } from "@/common/utils"
 
 export const baseApi = createApi({

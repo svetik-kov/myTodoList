@@ -4,7 +4,6 @@ import { App } from "./app/App.tsx"
 import { Provider } from "react-redux"
 import { store } from "./app/store.ts"
 import { BrowserRouter } from "react-router"
-//import { AppHttpRequests } from "@/app/AppHttpRequests.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
