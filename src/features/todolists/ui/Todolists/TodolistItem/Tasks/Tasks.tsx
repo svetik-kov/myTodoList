@@ -17,7 +17,7 @@ type Props = {
 export const Tasks = (props: Props) => {
   const { todolist } = props
   const { id, filter } = todolist
-  const { data, isLoading, error } = useGetTasksQuery(id)
+  const { data, isLoading, error } = useGetTasksQuery({ todolistId: id, params: { page: 1 } })
   const dispatch = useAppDispatch()
 
   useEffect(() => {
