@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { AUTH_TOKEN } from "@/common/constants"
 import { setAppErrorAC } from "@/app/app-slice.ts"
+import { isErrorWithMessage } from "@/common/utils/isErrorWithMessage.ts"
 
 export const baseApi = createApi({
   reducerPath: "todolistsApi",
@@ -30,15 +31,15 @@ export const baseApi = createApi({
       }
       if (result.error.status === 400) {
         // ✅ 1. Type Assertions
-        api.dispatch(setAppErrorAC({ error: (result.error.data as { message: string }).message }))
+        //api.dispatch(setAppErrorAC({ error: (result.error.data as { message: string }).message }))
         // ✅ 2. JSON.stringify
         // api.dispatch(setAppErrorAC({ error: JSON.stringify(result.error.data) }))
         // ✅ 3. Type Predicate
-        // if (isErrorWithMessage(result.error.data)) {
-        //   api.dispatch(setAppErrorAC({ error: result.error.data.message }))
-        // } else {
-        //   api.dispatch(setAppErrorAC({ error: JSON.stringify(result.error.data) }))
-        // }
+        if (isErrorWithMessage(result.error.data)) {
+          api.dispatch(setAppErrorAC({ error: result.error.data.message }))
+        } else {
+          api.dispatch(setAppErrorAC({ error: JSON.stringify(result.error.data) }))
+        }
       }
     }
 
