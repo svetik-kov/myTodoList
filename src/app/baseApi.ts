@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { AUTH_TOKEN } from "@/common/constants"
+import { setAppErrorAC } from "@/app/app-slice.ts"
 
 export const baseApi = createApi({
   reducerPath: "todolistsApi",
@@ -20,7 +21,14 @@ export const baseApi = createApi({
       },
     })(args, api, extraOptions)
 
+    if (result.error) {
+      if (result.error.status === "FETCH_ERROR") {
+        api.dispatch(setAppErrorAC({ error: result.error.error }))
+      }
+    }
+
     return result
   },
+
   endpoints: () => ({}),
 })
