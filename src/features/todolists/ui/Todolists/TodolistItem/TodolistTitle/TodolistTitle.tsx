@@ -22,7 +22,7 @@ export const TodolistTitle = ({ todolist }: Props) => {
   const [updateTodolistTitle] = useUpdateTodolistTitleMutation()
   const dispatch = useAppDispatch()
 
-  const changeTodolistStatus = (entityStatus: RequestStatus) => {
+  /* const changeTodolistStatus = (entityStatus: RequestStatus) => {
     dispatch(
       todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {
         const todolist = state.find((todolist) => todolist.id === id)
@@ -31,7 +31,7 @@ export const TodolistTitle = ({ todolist }: Props) => {
         }
       }),
     )
-  }
+  }*/
 
   /* const deleteTodolist = () => {
     changeTodolistStatus("loading")
