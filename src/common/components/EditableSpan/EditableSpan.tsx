@@ -26,14 +26,6 @@ export const EditableSpan = ({ value, onChange, disabled }: Props) => {
   }
 
   return (
-    /*<>
-        {isEditMode ? (
-            <input value={title} onChange={changeTitle} onBlur={turnOffEditMode} autoFocus />
-        ) : (
-            <span onDoubleClick={turnOnEditMode}>{value}</span>
-        )}
-      </>*/
-
     <>
       {isEditMode ? (
         <TextField

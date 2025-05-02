@@ -1,26 +1,7 @@
-import { instance } from "@/common/instance"
 import { DomainTask, GetTasksResponse, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types.ts"
 import { BaseResponse } from "@/common/types"
 import { baseApi } from "@/app/baseApi.ts"
 import { PAGE_SIZE } from "@/common/constants"
-
-export const _tasksApi = {
-  getTasks(todolistId: string) {
-    return instance.get<GetTasksResponse>(`/todo-lists/${todolistId}/tasks`)
-  },
-  createTask(payload: { todolistId: string; title: string }) {
-    const { todolistId, title } = payload
-    return instance.post<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${todolistId}/tasks`, { title })
-  },
-  deleteTask(payload: { todolistId: string; taskId: string }) {
-    const { todolistId, taskId } = payload
-    return instance.delete<BaseResponse>(`/todo-lists/${todolistId}/tasks/${taskId}`)
-  },
-  updateTask(payload: { todolistId: string; taskId: string; model: UpdateTaskModel }) {
-    const { todolistId, taskId, model } = payload
-    return instance.put<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
-  },
-}
 
 export const tasksApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -56,20 +37,7 @@ export const tasksApi = baseApi.injectEndpoints({
         method: "PUT",
         body: model,
       }),
-      /*async onQueryStarted({ todolistId, taskId, model }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          tasksApi.util.updateQueryData("getTasks", { todolistId, params: { page: 1 } }, (state) => {
-            const index = state.items.findIndex((task) => task.id === taskId)
-            if (index !== -1) {
-              state.items[index] = { ...state.items[index], ...model }
-            }
-          }),
-        )
-        try {
-          await queryFulfilled
-        } catch {
-          patchResult.undo()
-        }*/
+
       async onQueryStarted({ todolistId, taskId, model }, { dispatch, queryFulfilled, getState }) {
         const cachedArgsForQuery = tasksApi.util.selectCachedArgsForQuery(getState(), "getTasks")
 

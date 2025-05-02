@@ -1,10 +1,5 @@
 import { z } from "zod"
 
-/*export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-  rememberMe: z.boolean(),
-})*/
 export type Inputs = z.infer<typeof loginSchema>
 
 export const loginSchema = z.object({

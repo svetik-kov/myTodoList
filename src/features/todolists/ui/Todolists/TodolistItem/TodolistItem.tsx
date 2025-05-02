@@ -10,10 +10,8 @@ type Props = {
 }
 
 export const TodolistItem = ({ todolist }: Props) => {
-  //const dispatch = useAppDispatch()
   const [addTask] = useAddTaskMutation()
   const createTask = (title: string) => {
-    /* dispatch(createTaskTC({ todolistId: todolist.id, title }))*/
     addTask({ todolistId: todolist.id, title })
   }
 

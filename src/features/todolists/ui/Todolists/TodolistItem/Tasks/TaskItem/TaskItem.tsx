@@ -25,30 +25,6 @@ export const TaskItem = ({ task, todolist }: Props) => {
     removeTask({ todolistId: todolist.id, taskId: task.id })
   }
 
-  /*  const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
-      let status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
-      const model: UpdateTaskModel = {
-        status,
-        title: task.title,
-        deadline: task.deadline,
-        description: task.description,
-        priority: task.priority,
-        startDate: task.startDate,
-      }
-      updateTask({ taskId: task.id, todolistId: todolist.id, model })
-    }
-
-    const changeTaskTitle = (title: string) => {
-      const model: UpdateTaskModel = {
-        status: task.status,
-        title,
-        deadline: task.deadline,
-        description: task.description,
-        priority: task.priority,
-        startDate: task.startDate,
-      }
-      updateTask({ taskId: task.id, todolistId: todolist.id, model })
-    }*/
   const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
     const status = e.currentTarget.checked ? TaskStatus.Completed : TaskStatus.New
     const model = createTaskModel(task, { status })

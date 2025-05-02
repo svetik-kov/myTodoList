@@ -23,19 +23,6 @@ export const Login = () => {
   const theme = getTheme(themeMode)
 
   const [login] = useLoginMutation()
-  //const isLoggedIn = useAppSelector(selectIsLoggedIn)
-  // const navigate = useNavigate()
-  /*  type Inputs = {
-    email: string
-    password: string
-    rememberMe: boolean
-  }*/
-
-  /*  useEffect(() => {
-      if (isLoggedIn) {
-        navigate(Path.Main)
-      }
-    }, [isLoggedIn])*/
 
   const {
     register,
@@ -94,9 +81,6 @@ export const Login = () => {
                   name={"rememberMe"}
                   control={control}
                   render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
-                  /* render={({ field: { onChange, value } }) => (
-                    <Checkbox onChange={e => onChange(e.target.checked)} checked={value} />
-                  )}*/
                 />
               }
             />

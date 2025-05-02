@@ -21,15 +21,6 @@ export const TodolistTitle = ({ todolist }: Props) => {
   const [updateTodolistTitle] = useUpdateTodolistTitleMutation()
   const dispatch = useAppDispatch()
 
-  /* const deleteTodolist = () => {
-    changeTodolistStatus("loading")
-    removeTodolist(id)
-      .unwrap()
-      .catch(() => {
-        changeTodolistStatus("idle")
-      })
-  }*/
-
   const deleteTodolist = async () => {
     const patchResult = dispatch(
       todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {

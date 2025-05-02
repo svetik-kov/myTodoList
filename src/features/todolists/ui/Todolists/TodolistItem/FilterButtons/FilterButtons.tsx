@@ -14,25 +14,14 @@ export const FilterButtons = ({ todolist }: Props) => {
 
   const dispatch = useAppDispatch()
 
-  /* const changeFilter = (filter: FilterValues) => {
-    dispatch(changeTodolistFilterAC({ id, filter }))
-  }*/
-
   const changeFilter = (filter: FilterValues) => {
     dispatch(
-      todolistsApi.util.updateQueryData(
-        // название эндпоинта, в котором нужно обновить кэш
-        "getTodolists",
-        // аргументы для эндпоинта
-        undefined,
-        // `updateRecipe` - коллбэк для обновления закэшированного стейта мутабельным образом
-        (state) => {
-          const todolist = state.find((todolist: DomainTodolist) => todolist.id === id)
-          if (todolist) {
-            todolist.filter = filter
-          }
-        },
-      ),
+      todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {
+        const todolist = state.find((todolist: DomainTodolist) => todolist.id === id)
+        if (todolist) {
+          todolist.filter = filter
+        }
+      }),
     )
   }
 

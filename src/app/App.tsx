@@ -15,18 +15,13 @@ import { useMeQuery } from "@/features/auth/api/authApi.ts"
 import { ResultCode } from "@/common/enums/enums.ts"
 
 export const App = () => {
-  // const [isInitialized, setIsInitialized] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
-  //const isInitialized = useAppSelector(selectIsInitialized)
   const themeMode = useAppSelector(selectThemeMode)
   const dispatch = useAppDispatch()
   const theme = getTheme(themeMode)
 
   const { data, isLoading } = useMeQuery()
 
-  /*  useEffect(() => {
-      dispatch(initializeAppTC())
-    }, [])*/
   useEffect(() => {
     if (isLoading) return
     setIsInitialized(true)

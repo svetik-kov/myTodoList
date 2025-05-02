@@ -5,14 +5,7 @@ import { Todolists } from "@/features/todolists/ui/Todolists/Todolists.tsx"
 import { useAddTodolistMutation } from "@/features/todolists/api/todolistsApi.ts"
 
 export const Main = () => {
-  //const isLoggedIn = useAppSelector(selectIsLoggedIn)
-  //const dispatch = useAppDispatch()
-
   const [addTodolist] = useAddTodolistMutation()
-
-  /* const createTodolist = (title: string) => {
-     dispatch(createTodolistTC(title))
-   }*/
 
   return (
     <Container maxWidth={"lg"}>

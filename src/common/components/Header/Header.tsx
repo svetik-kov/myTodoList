@@ -35,9 +35,6 @@ export const Header = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
   }
 
-  /*const logout = () => {
-    dispatch(logoutTC())
-  }*/
   const logoutHandler = () => {
     logout()
       .then((res) => {
@@ -67,7 +64,6 @@ export const Header = () => {
           </div>
         </Container>
       </Toolbar>
-      {/* <LinearProgress />*/}
       {status === "loading" && <LinearProgress />}
     </AppBar>
   )
