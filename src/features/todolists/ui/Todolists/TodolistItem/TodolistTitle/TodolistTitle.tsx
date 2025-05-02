@@ -7,7 +7,6 @@ import {
   useRemoveTodolistMutation,
   useUpdateTodolistTitleMutation,
 } from "@/features/todolists/api/todolistsApi.ts"
-import { RequestStatus } from "@/common/types"
 import { useAppDispatch } from "@/common/hooks"
 import { DomainTodolist } from "@/features/todolists/lib/types"
 
